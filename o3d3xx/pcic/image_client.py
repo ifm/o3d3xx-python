@@ -84,21 +84,21 @@ class ImageClient(PCICV3Client):
 
 				# distinguish pixel type
 				if pixelFormat == 0:
-					image = array.array('B', data)
+					image = array.array('B', bytes(data))
 				elif pixelFormat == 1:
-					image = array.array('b', data)
+					image = array.array('b', bytes(data))
 				elif pixelFormat == 2:
-					image = array.array('H', data)
+					image = array.array('H', bytes(data))
 				elif pixelFormat == 3:
-					image = array.array('h', data)
+					image = array.array('h', bytes(data))
 				elif pixelFormat == 4:
-					image = array.array('I', data)
+					image = array.array('I', bytes(data))
 				elif pixelFormat == 5:
-					image = array.array('i', data)
+					image = array.array('i', bytes(data))
 				elif pixelFormat == 6:
-					image = array.array('f', data)
+					image = array.array('f', bytes(data))
 				elif pixelFormat == 8:
-					image = array.array('d', data)
+					image = array.array('d', bytes(data))
 				else:
 					image = None
 
