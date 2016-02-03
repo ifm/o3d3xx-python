@@ -20,16 +20,7 @@ class ImageClient(PCICV3Client):
 		self.sendCommand("p1")
 
 	def readNextFrame(self):
-		amplitudeImage = None
-		intensityImage = None
-		distanceImage = None
-		rawAmplitudeImage = None
-		xImage = None
-		yImage = None
-		zImage = None
-		confidenceImage = None
-		diagnosticData = None
-		rawImage = []
+		result = {}
 
 		# look for asynchronous output
 		ticket, answer = self.readNextAnswer()
@@ -113,45 +104,49 @@ class ImageClient(PCICV3Client):
 
 				# distance image
 				if chunkType == 100:
-					distanceImage = image
+					result['distance'] = image
 
 				# amplitude image
 				elif chunkType == 101:
-					amplitudeImage = image
+					result['amplitude'] = image
 
 				# intensity image
 				elif chunkType == 102:
-					intensityImage = image
+					result['intensity'] = image
 
 				# raw amplitude image
 				elif chunkType == 103:
-					rawAmplitudeImage = image
+					result['rawAmplitude'] = image
 
 				# X image
 				elif chunkType == 200:
-					xImage = image
+					result['x'] = image
 
 				# Y image
 				elif chunkType == 201:
-					yImage = image
+					result['y'] = image
 
 				# Z image
 				elif chunkType == 202:
-					zImage = image
+					result['z'] = image
 
 				# confidence image
 				elif chunkType == 300:
-					confidenceImage = image
+					result['confidence'] = image
 
 				# raw image
 				elif chunkType == 301:
-					rawImage.append(data)
+					if 'raw' not in result:
+						result['raw'] = []
+					result['raw'].append(image)
 
 				# diagnostic data
 				elif chunkType == 302:
 					illuTemp, frontendTemp1, frontendTemp2, imx6Temp, evalTime = struct.unpack('=iiiiI', bytes(data))
 					diagnosticData = dict([('illuTemp', illuTemp/10.0), ('frontendTemp1', frontendTemp1/10.0), ('frontendTemp2', frontendTemp2/10.0), ('imx6Temp', imx6Temp/10.0), ('evalTime', evalTime)])
+					result['diagnostic'] = diagnosticData
 
 				chunkCounter = chunkCounter + 1
 
-		return amplitudeImage, intensityImage, distanceImage, xImage, yImage, zImage, confidenceImage, diagnosticData, rawImage, rawAmplitudeImage
+		# return amplitudeImage, intensityImage, distanceImage, xImage, yImage, zImage, confidenceImage, diagnosticData, rawImage, rawAmplitudeImage
+		return result

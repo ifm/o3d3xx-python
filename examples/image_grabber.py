@@ -18,8 +18,9 @@ startTimestamp = lasttimestamp
 frameCounter = 0
 
 while True:
-	amplitudeImage, intensityImage, distanceImage, xImage, yImage, zImage, confidenceImage, diagnosticData, rawData, rawAmplitudeImage = pcic.readNextFrame()
-	print(diagnosticData)
+	result = pcic.readNextFrame()
+	if 'diagnostic' in result:
+		print(result['diagnostic'])
 	frameCounter = frameCounter + 1
 
 	# timing
