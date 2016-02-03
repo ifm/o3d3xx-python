@@ -3,7 +3,7 @@ from builtins import *
 import socket
 import re
 
-class Client:
+class Client(object):
     def __init__(self, address, port):
         # open raw socket
         self.pcicSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -17,7 +17,7 @@ class Client:
         self.close()
 
     def recv(self, numberBytes):
-        data = ""
+        data = bytearray()
         while len(data) < numberBytes:
             dataPart = self.pcicSocket.recv(numberBytes - len(data))
             data = data + dataPart
@@ -34,23 +34,25 @@ class PCICV3Client(Client):
         # read PCIC ticket + ticket length
         answer = self.recv(16)
         ticket = answer[0:4]
-        answerLength = int(re.findall(r'\d+', answer)[1])
+        answerLength = int(re.findall(r'\d+', str(answer))[1])
         answer = self.recv(answerLength)
         return ticket, answer[4:-2]
 
     def readAnswer(self, ticket):
         recvTicket = ""
         answer = ""
-        while recvTicket != ticket:
+        while recvTicket != ticket.encode():
             recvTicket, answer = self.readNextAnswer()
         return answer
 
     def sendCommand(self, cmd):
         cmdLen = len(cmd) + 6
-        lengthHeader = "1000L%09d\r\n" % cmdLen
+        lengthText = str.format("1000L%09d\r\n", cmdLen)
+        lengthHeader = str.encode(str("1000L%09d\r\n" % cmdLen))
         self.pcicSocket.sendall(lengthHeader)
-        self.pcicSocket.sendall("1000")
-        self.pcicSocket.sendall(cmd)
-        self.pcicSocket.sendall("\r\n")
+        self.pcicSocket.sendall(b"1000")
+        self.pcicSocket.sendall(cmd.encode())
+        newline = "\r\n"
+        self.pcicSocket.sendall(newline.encode())
         answer = self.readAnswer("1000")
         return answer
