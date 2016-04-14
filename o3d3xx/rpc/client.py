@@ -4,14 +4,14 @@ import xmlrpc.client
 from .session import *
 
 class Device:
-    def __init__(self, address):
+    def __init__(self, address="192.168.0.69", apiPath="/api/rpc/v1/"):
         self.address = address
-        self.baseURL = 'http://'+address+'/api/rpc/v1/'
+        self.baseURL = "http://" + address + apiPath
         self.mainURL = self.baseURL + 'com.ifm.efector/'
         self.rpc = xmlrpc.client.ServerProxy(self.mainURL)
 
-    def createSession(self, password=""):
-        self.sessionID = self.rpc.requestSession(password, "")
+    def requestSession(self, password="", sessionID=""):
+        self.sessionID = self.rpc.requestSession(password, sessionID)
         self.sessionURL = self.mainURL + 'session_' + self.sessionID + '/'
         self.session = Session(self.sessionURL)
         return self.session

@@ -12,7 +12,7 @@ class TestDevice(TestCase):
 		result = self.device.getSWVersion()
 		self.assertIsInstance(result, dict)
 
-	def test_create_session(self):
-		session = self.device.createSession()
+	def test_request_session(self):
+		session = self.device.requestSession()
 		self.assertIsInstance(session, o3d3xx.Session)
 		session.cancelSession()

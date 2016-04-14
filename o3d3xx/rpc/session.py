@@ -1,25 +1,34 @@
 from __future__ import (absolute_import, division, print_function, unicode_literals)
 from builtins import *
 import xmlrpc.client
+from .edit import *
 
 class Session:
 	def __init__(self, sessionURL):
-		self.sessionURL = sessionURL
-		self.rpc = xmlrpc.client.ServerProxy(self.sessionURL)
+		self.url = sessionURL
+		self.rpc = xmlrpc.client.ServerProxy(self.url)
 		self.rpc.heartbeat(300)
+
+	def setOperatingMode(self, mode):
+		if mode == 0:
+			self.stopEdit()
+		elif mode == 1:
+			return self.startEdit()
+		else:
+			raise ValueError("Invalid operating mode")
 
 	def startEdit(self):
 		self.rpc.setOperatingMode(1)
-		self.editURL = self.sessionURL + 'edit/'
-		self.edit = xmlrpc.client.ServerProxy(self.editURL)
-		self.deviceURL = self.editURL + 'device/'
-		self.device = xmlrpc.client.ServerProxy(self.deviceURL)
-		self.networkURL = self.deviceURL + 'network/'
-		self.network = xmlrpc.client.ServerProxy(self.networkURL)
+		self.edit = Edit(self.url + 'edit/')
 		self.updateAppUrl()
+		return self.edit
+
+	def stopEdit(self):
+		self.rpc.setOperatingMode(0)
+		self.edit = None
 
 	def updateAppUrl(self):
-		self.applicationURL = self.editURL + 'application/'
+		self.applicationURL = self.url + 'application/'
 		self.application = xmlrpc.client.ServerProxy(self.applicationURL)
 		self.imagerConfigURL = self.applicationURL + 'imager_001/'
 		self.imagerConfig = xmlrpc.client.ServerProxy(self.imagerConfigURL)

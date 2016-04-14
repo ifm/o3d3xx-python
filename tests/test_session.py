@@ -8,7 +8,7 @@ class TestSession(TestCase):
 	def setUp(self):
 		print("Create session")
 		self.device = o3d3xx.Device(deviceAddress)
-		self.session = self.device.createSession()
+		self.session = self.device.requestSession()
 
 	def tearDown(self):
 		self.session.cancelSession()
