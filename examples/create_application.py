@@ -7,7 +7,7 @@ else:
 	address='192.168.0.69'
 
 device = o3d3xx.Device(address)
-session = device.createSession()
+session = device.requestSession()
 session.startEdit()
 session.edit.createApplication()
-session.rpc.cancelSession()
+session.cancelSession()
