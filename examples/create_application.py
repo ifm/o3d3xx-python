@@ -13,11 +13,7 @@ device = o3d3xx.Device(address)
 # open a session and create an application for editing
 session = device.requestSession()
 session.startEdit()
-print(session)
 applicationIndex = session.edit.createApplication()
-print(applicationIndex)
-print(session)
-print(session.edit)
 session.edit.editApplication(applicationIndex)
 
 # configure the application to
