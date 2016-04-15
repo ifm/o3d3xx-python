@@ -17,5 +17,6 @@ class TestSession(TestCase):
 		result = self.session.heartbeat(300)
 		self.assertEqual(result, 300)
 
-	def test_start_edit(self):
+	def test_start_stop_edit(self):
 		self.session.startEdit()
+		self.session.stopEdit()
