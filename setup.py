@@ -16,6 +16,7 @@ setup(name = 'o3d3xx',
       author_email = 'Christoph.Freundl@ifm.com',
       license = 'MIT',
       packages = ['o3d3xx', 'o3d3xx.rpc', 'o3d3xx.pcic'],
+      install_requires = ['future>=0.15.2'],
       test_suite = 'nose.collector',
       tests_require = ['nose'],
       zip_safe = False)
