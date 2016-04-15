@@ -1,8 +1,8 @@
 from unittest import TestCase
 
 import o3d3xx
-
-deviceAddress = '172.25.125.100'
+import xmlrpc
+from .config import *
 
 class TestDevice(TestCase):
 	def setUp(self):
@@ -15,4 +15,11 @@ class TestDevice(TestCase):
 	def test_request_session(self):
 		session = self.device.requestSession()
 		self.assertIsInstance(session, o3d3xx.Session)
+		session.cancelSession()
+
+	def test_double_session(self):
+		session = self.device.requestSession()
+		with self.assertRaises(xmlrpc.client.Fault) as cm:
+			session2 = self.device.requestSession()
+		self.assertEqual(cm.exception.faultCode, 101004)
 		session.cancelSession()

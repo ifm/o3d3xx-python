@@ -1,8 +1,7 @@
 from unittest import TestCase
 
 import o3d3xx
-
-deviceAddress = '172.25.125.100'
+from .config import *
 
 class TestSession(TestCase):
 	def setUp(self):
