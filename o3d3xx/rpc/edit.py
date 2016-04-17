@@ -1,6 +1,7 @@
 from __future__ import (absolute_import, division, print_function, unicode_literals)
 from builtins import *
 import xmlrpc.client
+from .application import *
 
 class Edit:
 	def __init__(self, editURL):
@@ -10,17 +11,15 @@ class Edit:
 		self.device = xmlrpc.client.ServerProxy(self.deviceURL)
 		self.networkURL = self.deviceURL + 'network/'
 		self.network = xmlrpc.client.ServerProxy(self.networkURL)
-		self.updateAppUrl()
 
-	def updateAppUrl(self):
-		self.applicationURL = self.url + 'application/'
-		self.application = xmlrpc.client.ServerProxy(self.applicationURL)
-		self.imagerConfigURL = self.applicationURL + 'imager_001/'
-		self.imagerConfig = xmlrpc.client.ServerProxy(self.imagerConfigURL)
-		self.spatialFilterURL = self.imagerConfigURL + 'spatialfilter/'
-		self.spatialFilter = xmlrpc.client.ServerProxy(self.spatialFilterURL)
-		self.temporalFilterURL = self.imagerConfigURL + 'temporalfilter/'
-		self.temporalFilter = xmlrpc.client.ServerProxy(self.temporalFilterURL)
+	def editApplication(self, appIndex):
+		self.rpc.editApplication(appIndex)
+		self.application = Application(self.url + 'application/')
+		return self.application
+
+	def stopEditingApplication(self):
+		self.rpc.stopEditingApplication()
+		self.application = None
 
 	def __getattr__(self, name):
 		# Forward otherwise undefined method calls to XMLRPC proxy
