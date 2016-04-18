@@ -1,6 +1,5 @@
 from setuptools import setup, find_packages
 
-
 # Workaround for issue
 # https://bugs.python.org/issue15881
 try:
@@ -15,8 +14,9 @@ setup(name = 'o3d3xx',
       author = 'Christoph Freundl',
       author_email = 'Christoph.Freundl@ifm.com',
       license = 'MIT',
-      packages = ['o3d3xx', 'o3d3xx.rpc', 'o3d3xx.pcic'],
-      install_requires = ['future>=0.15.2'],
+      packages = ['o3d3xx'],
+      install_requires = ['future'],
       test_suite = 'nose.collector',
       tests_require = ['nose'],
       zip_safe = False)
+
