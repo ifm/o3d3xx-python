@@ -9,7 +9,7 @@ if len(sys.argv) > 1:
 else:
 	address='192.168.0.69'
 
-pcic = o3d3xx.pcic.ImageClient(address, 50010)
+pcic = o3d3xx.ImageClient(address, 50010)
 pcic.debug = True
 
 # repeatedly read frames from the process interface

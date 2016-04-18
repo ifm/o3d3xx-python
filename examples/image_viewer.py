@@ -43,7 +43,7 @@ def updatefig(*args):
 
 def main():
     address = sys.argv[1]
-    camData = o3d3xx.pcic.ImageClient(address, 50010)
+    camData = o3d3xx.ImageClient(address, 50010)
 
     fig = plt.figure()
     grabber = GrabO3D300(camData)
