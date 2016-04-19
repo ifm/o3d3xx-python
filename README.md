@@ -71,7 +71,7 @@ acquired:
     - `temporalFilter = application.temporalFilter`
 
 ### PCIC client
-The library currently provides only two basic clients:
+The library currently provides two basic clients:
 
 * A simple PCIC V3 client
     - Create it with `pcic = o3d3xx.PCICV3Client("192.168.0.69", 50010)`
@@ -89,3 +89,15 @@ The library currently provides only two basic clients:
     - It configures a PCIC connection to receive all image types.
     - Read back the next result (a dictionary containing all the images)
       with `result = pcic.readNextFrame()`
+
+Links
+-----
+O3D3xx related libraries for other programming languages:
+
+* C++: [libo3d3xx](https://github.com/lovepark/libo3d3xx)
+* Ruby: [ruby-o3d3xx](https://github.com/graugans/ruby-o3d3xx)
+
+Contributing
+------------
+o3d3xx-python is available at
+[Github](https://github.com/cfreundl/o3d3xx-python)

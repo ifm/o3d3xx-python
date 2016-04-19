@@ -10,7 +10,7 @@ except ImportError:
 setup(name = 'o3d3xx',
       version = '0.1',
       description = 'A Python library for ifm O3D3xx devices',
-      url = '',
+      url = 'https://github.com/cfreundl/o3d3xx-python',
       author = 'Christoph Freundl',
       author_email = 'Christoph.Freundl@ifm.com',
       license = 'MIT',
