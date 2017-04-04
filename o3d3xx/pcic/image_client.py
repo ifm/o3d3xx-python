@@ -62,6 +62,8 @@ class ImageClient(PCICV3Client):
 
 				if headerVersion == 1:
 					chunkType, chunkSize, headerSize, headerVersion, imageWidth, imageHeight, pixelFormat, timeStamp, frameCount = struct.unpack('IIIIIIIII', bytes(data))
+				elif headerVersion == 2:
+					chunkType, chunkSize, headerSize, headerVersion, imageWidth, imageHeight, pixelFormat, timeStamp, frameCount, statusCode, timeStampSec, timeStampNsec = struct.unpack('IIIIIIIIIIII', bytes(data))
 				else:
 					print("Unknown chunk header version %d!" % headerVersion)
 
