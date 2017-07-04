@@ -11,6 +11,7 @@ class Edit:
 		self.device = xmlrpc.client.ServerProxy(self.deviceURL)
 		self.networkURL = self.deviceURL + 'network/'
 		self.network = xmlrpc.client.ServerProxy(self.networkURL)
+		self.application = Application(self.url + 'application/')
 
 	def editApplication(self, appIndex):
 		self.rpc.editApplication(appIndex)
