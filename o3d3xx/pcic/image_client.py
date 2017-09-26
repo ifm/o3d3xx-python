@@ -135,41 +135,51 @@ class ImageClient(PCICV3Client):
 
                 # distance image
                 if chunkType == 100:
-                    result['distance'] = image
+                    t = 'distance'                    
+                    result[t] = {'data':image, 'ts': timeStamp, 'resx': imageWidth, 'resy':imageHeight}
 
                 # amplitude image
                 elif chunkType == 101:
-                    result['amplitude'] = image
+                    t = 'amplitude'
+                    result[t] = {'data':image, 'ts': timeStamp, 'resx': imageWidth, 'resy':imageHeight}
 
                 # intensity image
                 elif chunkType == 102:
-                    result['intensity'] = image
+                    t = 'intensity'
+                    result[t] = {'data':image, 'ts': timeStamp, 'resx': imageWidth, 'resy':imageHeight}
 
                 # raw amplitude image
                 elif chunkType == 103:
-                    result['rawAmplitude'] = image
+                    t = 'rawAmplitude'
+                    result[t] = {'data':image, 'ts': timeStamp, 'resx': imageWidth, 'resy':imageHeight}
 
                 # X image
                 elif chunkType == 200:
-                    result['x'] = image
+                    t = 'x'
+                    result[t] = {'data':image, 'ts': timeStamp, 'resx': imageWidth, 'resy':imageHeight}
 
                 # Y image
                 elif chunkType == 201:
-                    result['y'] = image
+                    t = 'y'
+                    result[t] = image
+                    result[t] = {'data':image, 'ts': timeStamp, 'resx': imageWidth, 'resy':imageHeight}
 
                 # Z image
                 elif chunkType == 202:
-                    result['z'] = image
+                    t = 'z'
+                    result[t] = {'data':image, 'ts': timeStamp, 'resx': imageWidth, 'resy':imageHeight}
 
                 # confidence image
                 elif chunkType == 300:
-                    result['confidence'] = image
+                    t = 'confidence'
+                    result[t] = {'data':image, 'ts': timeStamp, 'resx': imageWidth, 'resy':imageHeight}
 
                 # raw image
                 elif chunkType == 301:
-                    if 'raw' not in result:
-                        result['raw'] = []
-                    result['raw'].append(image)
+                    t = 'raw'
+                    if t not in result: 
+                        result[t] = {'data':[], 'ts': 0, 'resx': 0, 'resy':0}
+                    result[t] = {'data':image, 'ts': timeStamp, 'resx': imageWidth, 'resy':imageHeight}
 
                 # diagnostic data
                 elif chunkType == 302:
@@ -178,9 +188,9 @@ class ImageClient(PCICV3Client):
                     result['diagnostic'] = diagnosticData
 
                 elif chunkType == 500:
-                    if 'models' not in result:
-                            result['models'] = [];
-                    result['models'] = json.loads(data)
+                    t = 'models'
+                    result[t] = {'data':data, 'ts': timeStamp}
+
                 chunkCounter = chunkCounter + 1
 
         # return amplitudeImage, intensityImage, distanceImage, xImage, yImage, zImage, confidenceImage, diagnosticData, rawImage, rawAmplitudeImage
