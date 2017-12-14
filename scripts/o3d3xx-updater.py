@@ -27,6 +27,7 @@ import os.path
 import time
 import threading
 import sys
+import json
 
 class SWUpdate :
 
@@ -36,7 +37,6 @@ class SWUpdate :
         else:
             self.hostname=hostname
         self.xml_rpc = o3d3xx.Device(self.hostname)
-        self.mode = self.get_mode()
         self.filename = filename
 
     def __enter__(self):
@@ -45,50 +45,11 @@ class SWUpdate :
     def __exit__(self,exc_type, exc_value, traceback):
         pass
 
-    def get_mode(self):
-        response = requests.get("http://"+self.hostname)
-        mode = 0
-        while True:
-            if response.ok:
-                self.mode = mode
-                break
-            else:
-                response = requests.get("http://"+self.hostname+":8080")
-                mode = 1
-                time.sleep(0.1)
-        return mode
-
 
     def check_filename(self, filename):
         while not filename or not os.path.exists(filename):
             filename = input("Input file not Found. Please enter filepath: ")
         return filename
-
-
-    def reboot(self, mode):
-        mode = int(mode)
-        if mode not in [0, 1]:
-            raise ValueError("reboot only takes modes 0(productive) and 1(recovery)")
-
-        if self.mode != mode:
-
-            if mode:
-                print("Rebooting to mode 1(recovery)...")
-                self.xml_rpc.reboot(1)
-            else:
-                print("Rebooting to mode 0(productive)...")
-                requests.post("http://"+self.hostname+":8080/reboot_to_live")
-
-            self.wait_for_reboot(mode)
-        else:
-            print("Device is already in this mode!")
-
-    def wait_for_reboot(self, mode):
-        reboot_mode = self.get_mode()
-        while reboot_mode != mode:
-            time.sleep(0.2)
-            reboot_mode = self.get_mode()
-        print("Finished rebooting into mode {}".format(mode))
 
     def upload(self,filename):
         # the camera doesnt respong, so the post never returns, this is a quite hackish (hopefully temp.) solution:
@@ -104,17 +65,19 @@ class SWUpdate :
         thread.daemon = True
         thread.start()
 
-        finished = self.status()[1]["Status"] == "3"
+        finished = False
 
         while not finished:
-            isOk, json = self.status()
-            if json["Msg"] != "":
-                print("\n"+json["Msg"])
-            if json["Error"] != 0 or not isOk:
+            isOk, res = self.status()
+            if isOk and res["Msg"] != "":
+                print("\n"+res["Msg"])
+            if not isOk:
                 raise requests.exceptions.HTTPError("Something went wrong during Uploading/Installation")
-            finished = json["Status"] == "3"
+            if res["Error"] != "0":
+                print(json.dumps(res, indent = 4))
+                raise requests.exceptions.HTTPError("Error occured during Installation")
+            finished = res["Status"] == "3"
             time.sleep(0.5)
-            duration = time.time() - start
         print("Finished Install")
 
     def status(self):
@@ -126,11 +89,12 @@ class SWUpdate :
             return False,{}
 
     def install_swu(self, filename):
-        if not self.mode:
-            self.reboot(1)
         self.upload(filename)
-        self.reboot(0)
+        self.reboot()
 
+    def reboot(self):
+        print("Rebooting to productive mode...")
+        requests.post("http://"+self.hostname+":8080/reboot_to_live")
 
 if __name__ == "__main__":
     import argparse
@@ -138,17 +102,9 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("-i", "--input", help="specify input SWU file and install update")
     p.add_argument("-H", "--host", help="specify host ip")
-    p.add_argument("-r", "--reboot", help="reboot to the mode specified(0: productive, 1:recovery) and exit")
-    p.add_argument("-m", "--mode", help="print curret mode and exit", action="store_true")
     args = p.parse_args()
     if len(sys.argv) == 1:
         p.print_help()
-    elif args.mode:
-        s = SWUpdate(args.host)
-        print(s.mode)
-    elif args.reboot is not None:
-        s = SWUpdate(args.host)
-        s.reboot(args.reboot)
     else:
         s = SWUpdate(args.host)
         if args.input:
