@@ -8,15 +8,6 @@ from .client import PCICV3Client
 class ImageClient(PCICV3Client):
 	def __init__(self, address, port):
 		super(ImageClient, self).__init__(address, port)
-		# disable all result output
-		self.sendCommand("p0")
-		# format string for all images
-		pcicConfig = "{ \"layouter\": \"flexible\", \"format\": { \"dataencoding\": \"ascii\" }, \"elements\": [ { \"type\": \"string\", \"value\": \"star\", \"id\": \"start_string\" }, { \"type\": \"blob\", \"id\": \"normalized_amplitude_image\" }, { \"type\": \"blob\", \"id\": \"distance_image\" }, { \"type\": \"blob\", \"id\": \"x_image\" }, { \"type\": \"blob\", \"id\": \"y_image\" }, { \"type\": \"blob\", \"id\": \"z_image\" }, { \"type\": \"blob\", \"id\": \"confidence_image\" }, { \"type\": \"blob\", \"id\": \"diagnostic_data\" }, { \"type\": \"string\", \"value\": \"stop\", \"id\": \"end_string\" } ] }"
-		answer = self.sendCommand("c%09d%s" % (len(pcicConfig), pcicConfig))
-		if str(answer, 'utf-8') != "*":
-			throw
-		# enable result output again
-		self.sendCommand("p1")
 
 	def readNextFrame(self):
 		result = {}
