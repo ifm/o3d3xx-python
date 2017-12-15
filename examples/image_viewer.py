@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 
-imageWidth = 176
-imageHeight = 132
+imageWidth = 224
+imageHeight = 172
 
 class GrabO3D300():
     def __init__(self,data):
@@ -19,9 +19,9 @@ class GrabO3D300():
 
     def readNextFrame(self):
         result = self.data.readNextFrame()
-        self.Amplitude = np.frombuffer(result['amplitude'],dtype='uint16')
+        self.Amplitude = np.asarray(result['amplitude'])
         self.Amplitude = self.Amplitude.reshape(imageHeight,imageWidth)
-        self.Distance = np.frombuffer(result['distance'],dtype='uint16')
+        self.Distance = np.asarray(result['distance'])
         self.Distance = self.Distance.reshape(imageHeight,imageWidth)
         self.illuTemp = 20.0
 
