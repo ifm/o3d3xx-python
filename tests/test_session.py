@@ -17,11 +17,11 @@ class TestSession(TestCase):
 		result = self.session.heartbeat(300)
 		self.assertEqual(result, 300)
 
-        def test_auto_heartbeat(self):
-                time.sleep(40)
-                # session must still be open
-                result = self.session.heartbeat(30)
-                self.assertEqual(result, 30)
+	def test_auto_heartbeat(self):
+		time.sleep(40)
+		# session must still be open
+		result = self.session.heartbeat(30)
+		self.assertEqual(result, 30)
 
 	def test_start_stop_edit(self):
 		self.session.startEdit()
