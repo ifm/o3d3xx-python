@@ -143,8 +143,15 @@ class ImageClient(PCICV3Client):
 
 				# diagnostic data
 				elif chunkType == 302:
-					illuTemp, frontendTemp1, frontendTemp2, imx6Temp, evalTime = struct.unpack('=iiiiI', bytes(data))
-					diagnosticData = dict([('illuTemp', illuTemp/10.0), ('frontendTemp1', frontendTemp1/10.0), ('frontendTemp2', frontendTemp2/10.0), ('imx6Temp', imx6Temp/10.0), ('evalTime', evalTime)])
+					diagnosticData = {}
+					payloadSize = chunkSize - headerSize
+					# the diagnostic data blob contains at least four temperatures plus the evaluation time
+					if payloadSize >= 20:
+						illuTemp, frontendTemp1, frontendTemp2, imx6Temp, evalTime = struct.unpack('=iiiiI', bytes(data[0:20]))
+						diagnosticData = dict([('illuTemp', illuTemp/10.0), ('frontendTemp1', frontendTemp1/10.0), ('frontendTemp2', frontendTemp2/10.0), ('imx6Temp', imx6Temp/10.0), ('evalTime', evalTime)])
+					# check whether framerate is also provided
+					if payloadSize == 24:
+						diagnosticData['frameRate'] = struct.unpack('=I', bytes(data[20:24]))[0]
 					result['diagnostic'] = diagnosticData
 
 				chunkCounter = chunkCounter + 1
