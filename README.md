@@ -95,9 +95,9 @@ Links
 O3D3xx related libraries for other programming languages:
 
 * C++: [libo3d3xx](https://github.com/lovepark/libo3d3xx)
-* Ruby: [ruby-o3d3xx](https://github.com/graugans/ruby-o3d3xx)
+* Ruby: [ruby-o3d3xx](https://github.com/ifm/ruby-o3d3xx)
 
 Contributing
 ------------
 o3d3xx-python is available at
-[Github](https://github.com/cfreundl/o3d3xx-python)
+[Github](https://github.com/ifm/o3d3xx-python)
