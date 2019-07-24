@@ -3,7 +3,8 @@ from builtins import *
 import struct
 import array
 
-from .client import PCICV3Client
+from o3d3xx.pcic.client import PCICV3Client
+from o3d3xx.pcic.cwrappers import IntrinsicCalibration, ExtrinsicCalibration
 
 class ImageClient(PCICV3Client):
 	def __init__(self, address, port):
@@ -11,12 +12,13 @@ class ImageClient(PCICV3Client):
 		# disable all result output
 		self.sendCommand("p0")
 		# format string for all images
-		pcicConfig = "{ \"layouter\": \"flexible\", \"format\": { \"dataencoding\": \"ascii\" }, \"elements\": [ { \"type\": \"string\", \"value\": \"star\", \"id\": \"start_string\" }, { \"type\": \"blob\", \"id\": \"normalized_amplitude_image\" }, { \"type\": \"blob\", \"id\": \"distance_image\" }, { \"type\": \"blob\", \"id\": \"x_image\" }, { \"type\": \"blob\", \"id\": \"y_image\" }, { \"type\": \"blob\", \"id\": \"z_image\" }, { \"type\": \"blob\", \"id\": \"confidence_image\" }, { \"type\": \"blob\", \"id\": \"diagnostic_data\" }, { \"type\": \"string\", \"value\": \"stop\", \"id\": \"end_string\" } ] }"
+		pcicConfig = "{ \"layouter\": \"flexible\", \"format\": { \"dataencoding\": \"ascii\" }, \"elements\": [ { \"type\": \"string\", \"value\": \"star\", \"id\": \"start_string\" }, { \"type\": \"blob\", \"id\": \"normalized_amplitude_image\" }, { \"type\": \"blob\", \"id\": \"distance_image\" }, { \"type\": \"blob\", \"id\": \"x_image\" }, { \"type\": \"blob\", \"id\": \"y_image\" }, { \"type\": \"blob\", \"id\": \"z_image\" }, { \"type\": \"blob\", \"id\": \"confidence_image\" }, { \"type\": \"blob\", \"id\": \"diagnostic_data\" }, { \"type\": \"blob\", \"id\": \"extrinsic_calibration\" }, { \"type\": \"blob\", \"id\": \"intrinsic_calibration\" },{ \"type\": \"blob\", \"id\": \"inverse_intrinsic_calibration\" },{ \"type\": \"string\", \"value\": \"stop\", \"id\": \"end_string\" } ] }"
 		answer = self.sendCommand("c%09d%s" % (len(pcicConfig), pcicConfig))
 		if str(answer, 'utf-8') != "*":
-			throw
+			raise
 		# enable result output again
 		self.sendCommand("p1")
+
 
 	def readNextFrame(self):
 		result = {}
@@ -34,7 +36,7 @@ class ImageClient(PCICV3Client):
 
 			if data != b"star":
 				print(data)
-				throw
+				raise
 
 			chunkCounter = 1
 
@@ -153,6 +155,15 @@ class ImageClient(PCICV3Client):
 					if payloadSize == 24:
 						diagnosticData['frameRate'] = struct.unpack('=I', bytes(data[20:24]))[0]
 					result['diagnostic'] = diagnosticData
+
+				elif chunkType == 400:
+					result['extrinsicCalibration'] = ExtrinsicCalibration.from_buffer(data)
+
+				elif chunkType == 401:
+					result['intrinsicCalibration'] = IntrinsicCalibration.from_buffer(data)
+
+				elif chunkType == 402:
+					result['inverseIntrinsicCalibration'] = IntrinsicCalibration.from_buffer(data)
 
 				chunkCounter = chunkCounter + 1
 
