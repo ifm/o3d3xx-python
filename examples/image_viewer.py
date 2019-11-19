@@ -19,9 +19,9 @@ class GrabO3D300():
 
     def readNextFrame(self):
         result = self.data.readNextFrame()
-        self.Amplitude = np.frombuffer(result['amplitude'],dtype='uint16')
+        self.Amplitude = np.frombuffer(result['amplitude_image'],dtype='uint16')
         self.Amplitude = self.Amplitude.reshape(imageHeight,imageWidth)
-        self.Distance = np.frombuffer(result['distance'],dtype='uint16')
+        self.Distance = np.frombuffer(result['distance_image'],dtype='uint16')
         self.Distance = self.Distance.reshape(imageHeight,imageWidth)
         self.illuTemp = 20.0
 
@@ -43,7 +43,8 @@ def updatefig(*args):
 
 def main():
     address = sys.argv[1]
-    camData = o3d3xx.ImageClient(address, 50010)
+    camData = o3d3xx.FormatClient(address, 50010,
+        o3d3xx.PCICFormat.blobs("amplitude_image", "distance_image"))
 
     fig = plt.figure()
     grabber = GrabO3D300(camData)

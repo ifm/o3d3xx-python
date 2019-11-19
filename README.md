@@ -71,7 +71,7 @@ acquired:
     - `temporalFilter = application.temporalFilter`
 
 ### PCIC client
-The library currently provides two basic clients:
+The library currently provides three basic clients:
 
 * A simple PCIC V3 client
     - Create it with `pcic = o3d3xx.PCICV3Client("192.168.0.69", 50010)`
@@ -84,7 +84,22 @@ The library currently provides two basic clients:
       `answer = pcic.readAnswer("0000")`
     - Read back any answer coming from the device:  
       `ticket, answer = pcic.readNextAnswer()`
+* A PCIC client supporting arbitrary formatting
+    - Define an instance of `o3d3xx.PCICFormat` to describe which data you
+      want to retrieve
+    - Most common use case: retrieval of binary data. For example, if you want
+      to receive amplitude and radial distance images, use the format
+      `o3d3xx.PCICFormat.blobs("amplitude_image", "distance_image")`.
+    - Create the client with
+      `pcic = o3d3xx.FormatClient("192.168.0.69", format)` with `format` being
+      the `PCICFormat` instance described above.
+    - When `result = pcic.readNextFrame()` returns for the given example,
+      `result` is a dictionary containing image arrays for the keys
+      `amplitude_image` and `distance_image`.
 * A PCIC client for asynchronous image retrieval
+    - Deprecated, please use the `o3d3xx.FormatClient` instead, it uses much
+      less network bandwidth if you are not interested in all available image
+      types.
     - Create it with `pcic = o3d3xx.ImageClient("192.168.0.69", 50010)`.
     - It configures a PCIC connection to receive all image types.
     - Read back the next result (a dictionary containing all the images)

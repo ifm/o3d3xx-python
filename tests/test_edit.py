@@ -28,7 +28,6 @@ class TestEdit(TestCase):
 		self.edit.editApplication(appIndex)
 		result = self.edit.application.getAllParameters()
 		self.assertIsInstance(result, dict)
-		print self.edit.application.imagerConfig
 		result = self.edit.application.imagerConfig.getAllParameters()
 		self.assertIsInstance(result, dict)
 		result = self.edit.application.spatialFilter.getAllParameters()
