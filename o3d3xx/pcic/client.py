@@ -20,6 +20,8 @@ class Client(object):
         data = bytearray()
         while len(data) < numberBytes:
             dataPart = self.pcicSocket.recv(numberBytes - len(data))
+            if len(dataPart) == 0:
+                raise RuntimeError('connection to server closed')
             data = data + dataPart
         self.recvCounter += numberBytes
         if self.outFile != None:
