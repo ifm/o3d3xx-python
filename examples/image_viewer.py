@@ -31,14 +31,10 @@ def updatefig(*args):
     imAmp = args[2]
     amp_max = float(max(np.max(g.Amplitude),1));
     imAmp.set_array(g.Amplitude/ amp_max)
-    #axAmp = imAmp.get_axes()
-    #axAmp.set_title('Amplitude (Illu temp: %0.2f)'%(g.illuTemp))
 
     imDist = args[3]
     dist_max = float(max(np.max(g.Distance),1));
     imDist.set_array(g.Distance/ dist_max)
-    #axDist = imDist.get_axes()
-    #axDist.set_title('Distance')
     return imAmp,imDist,
 
 def main():
@@ -48,7 +44,9 @@ def main():
     fig = plt.figure()
     grabber = GrabO3D300(camData)
     ax1 = fig.add_subplot(1, 2, 1)
+    ax1.set_title('Amplitude')
     ax2 = fig.add_subplot(1, 2, 2)
+    ax2.set_title('Distance')
     imAmplitude = ax1.imshow(np.random.rand(imageHeight,imageWidth))
     imDistance = ax2.imshow(np.random.rand(imageHeight,imageWidth))
     ani = animation.FuncAnimation(fig, updatefig, interval=50, blit=True, fargs = [grabber,imAmplitude,imDistance])
