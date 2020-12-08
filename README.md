@@ -94,7 +94,7 @@ Links
 -----
 O3D3xx related libraries for other programming languages:
 
-* C++: [libo3d3xx](https://github.com/lovepark/libo3d3xx)
+* C++: [ifm3d](https://github.com/ifm/ifm3d)
 * Ruby: [ruby-o3d3xx](https://github.com/graugans/ruby-o3d3xx)
 
 Contributing
