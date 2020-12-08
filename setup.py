@@ -8,7 +8,7 @@ except ImportError:
 	pass
 
 setup(name = 'o3d3xx',
-      version = '0.1',
+      version = '0.2',
       description = 'A Python library for ifm O3D3xx devices',
       url = 'https://github.com/cfreundl/o3d3xx-python',
       author = 'Christoph Freundl',
