@@ -31,14 +31,14 @@ def updatefig(*args):
     imAmp = args[2]
     amp_max = float(max(np.max(g.Amplitude),1));
     imAmp.set_array(g.Amplitude/ amp_max)
-    axAmp = imAmp.get_axes()
-    axAmp.set_title('Amplitude (Illu temp: %0.2f)'%(g.illuTemp))
+    #axAmp = imAmp.get_axes()
+    #axAmp.set_title('Amplitude (Illu temp: %0.2f)'%(g.illuTemp))
 
     imDist = args[3]
     dist_max = float(max(np.max(g.Distance),1));
     imDist.set_array(g.Distance/ dist_max)
-    axDist = imDist.get_axes()
-    axDist.set_title('Distance')
+    #axDist = imDist.get_axes()
+    #axDist.set_title('Distance')
     return imAmp,imDist,
 
 def main():
