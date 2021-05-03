@@ -1,0 +1,71 @@
+{
+    "elements": [
+        {
+            "id": "start_string",
+            "type": "string",
+            "value": "star;"
+        },
+        {
+            "elements": [
+                {
+                    "elements": [
+                        {
+                            "format": {
+                                "fill": "0",
+                                "width": 2
+                            },
+                            "id": "id",
+                            "type": "int32"
+                        },
+                        {
+                            "id": "delimiter",
+                            "type": "string",
+                            "value": ";"
+                        },
+                        {
+                            "id": "state",
+                            "type": "int32"
+                        },
+                        {
+                            "id": "delimiter",
+                            "type": "string",
+                            "value": ";"
+                        },
+                        {
+                            "format": {
+                                "fill": "+",
+                                "precision": 3,
+                                "width": 6
+                            },
+                            "id": "procval",
+                            "type": "float32"
+                        },
+                        {
+                            "id": "delimiter",
+                            "type": "string",
+                            "value": "*"
+                        }
+                    ],
+                    "id": "rois",
+                    "type": "records"
+                },
+                {
+                    "id": "delimiter",
+                    "type": "string",
+                    "value": "|"
+                }
+            ],
+            "id": "models",
+            "type": "records"
+        },
+        {
+            "id": "end_string",
+            "type": "string",
+            "value": "stop"
+        }
+    ],
+    "format": {
+        "dataencoding": "ascii"
+    },
+    "layouter": "flexible"
+}
