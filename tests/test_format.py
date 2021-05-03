@@ -47,6 +47,7 @@ class TestPcicParser(TestCase):
         images.addBlobElement("amplitude_image")
         format = PCICFormat()
         format.addRecordElement(images)
+        format.addRecordElement(images)
         parser = PCICParser(format)
 
         result = parser.parseAnswer(amplitudeImageBlob + amplitudeImageBlob)
@@ -56,3 +57,61 @@ class TestPcicParser(TestCase):
                 {"amplitude_image": array.array('H', [1, 2])}
             ]}
         )
+
+    def test_formatParser(self):
+        with open('./data/answer.txt', 'r') as file:
+            string_answer = file.read()
+            encoded_string = string_answer.encode()
+            answer = bytearray(encoded_string)
+        with open('./data/formatString.txt', 'r') as file:
+            formatstring = file.read()
+
+        format = PCICFormat(str(formatstring))
+        parser = PCICParser(format)
+        format_parser = FormatParser(parser, answer, format)
+        format_unrolled = format_parser.unrolledFormatMap()
+
+        with open('./data/formatStringReference.txt', 'r') as file:
+            formatstring = file.read()
+
+        format_reference = PCICFormat(str(formatstring))
+        self.assertDictEqual(format_unrolled.formatMap, format_reference.formatMap)
+
+    def test_parseAnswer(self):
+        with open('./data/answer.txt', 'r') as file:
+            string_answer = file.read()
+            encoded_string = string_answer.encode()
+            answer = bytearray(encoded_string)
+        with open('./data/formatString.txt', 'r') as file:
+            formatstring = file.read()
+
+        format = PCICFormat(str(formatstring))
+        parser = PCICParser(format)
+        format_parser = FormatParser(parser, answer, format)
+        format_parser.unrolledFormatMap()
+
+        result = parser.parseAnswer(answer)
+
+        self.assertEqual(result['models'].__len__(), 2)
+        self.assertEqual(result['models'][0]['rois'].__len__(), 3)
+        self.assertEqual(result['models'][1]['rois'].__len__(), 3)
+
+        self.assertEqual(result['models'][0]['rois'][0]['state'], 6)
+        self.assertEqual(result['models'][0]['rois'][1]['state'], 6)
+        self.assertEqual(result['models'][0]['rois'][2]['state'], 0)
+        self.assertEqual(result['models'][0]['rois'][0]['procval'], 0.607)
+        self.assertEqual(result['models'][0]['rois'][1]['procval'], 0.532)
+        self.assertEqual(result['models'][0]['rois'][2]['procval'], 0.446)
+        self.assertEqual(result['models'][0]['rois'][0]['id'], 0)
+        self.assertEqual(result['models'][0]['rois'][1]['id'], 1)
+        self.assertEqual(result['models'][0]['rois'][2]['id'], 2)
+
+        self.assertEqual(result['models'][1]['rois'][0]['state'], 6)
+        self.assertEqual(result['models'][1]['rois'][1]['state'], 6)
+        self.assertEqual(result['models'][1]['rois'][2]['state'], 0)
+        self.assertEqual(result['models'][1]['rois'][0]['procval'], 0.567)
+        self.assertEqual(result['models'][1]['rois'][1]['procval'], 0.601)
+        self.assertEqual(result['models'][1]['rois'][2]['procval'], 0.5)
+        self.assertEqual(result['models'][1]['rois'][0]['id'], 0)
+        self.assertEqual(result['models'][1]['rois'][1]['id'], 1)
+        self.assertEqual(result['models'][1]['rois'][2]['id'], 2)
