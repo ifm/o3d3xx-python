@@ -105,6 +105,30 @@ The library currently provides three basic clients:
     - Read back the next result (a dictionary containing all the images)
       with `result = pcic.readNextFrame()`
 
+### PCIC interface (ifmVisionAssistant)
+Following structure in the process interface is required for multiple and 
+nested records:
+
+* supported interface structure
+    - records require a special delimiter at the end like seen in below 
+      example. default delimiters `|` and `*` can be parsed without any 
+      changes in library.
+    - multiple or nested records between two blob images
+    - multiple models and ROIs in application which yield cascaded model 
+      records in result.
+    - blob image(s) at the start or between the result
+
+
+      star ; X Image ; models                                 Normalized amplitude image ; stop
+                         |                                                  |                   
+                         ID ; ROIs;             Value of SP1 ; Value of SP2 |  <-- default delimiter for models
+                               |                      |
+                               ID ; Process value ; Status *  <-- default delimiter for ROIs
+    
+* restrictions
+    - single blob image at the end of multiple or nested records
+    - positional swap of delimiters `|` and `*` in process interface
+    
 Links
 -----
 O3D3xx related libraries for other programming languages:
